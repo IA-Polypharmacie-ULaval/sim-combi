@@ -42,31 +42,30 @@ Template of `config.json` in `configs/`
     * `std_rr`: Gaussian standard deviation of these combinations
 
 
-## Distributions utilisees
-### Patrons
-Ici, on utilise des distributions uniformes dans l'intervalle [`patterns:min_rr`, `patterns:max_rr`] afin de faciliter la creation de jeux de donnees plus ou moins difficiles
+## Used Distributions
+### Patterns
+Here, uniform distributions within the interval [`patterns:min_rr`, `patterns:max_rr`] are used to facilitate the creation of datasets of varying difficulty levels.
 
-### Combinaisons avec intersection avec un patron
-On utilise une normale d'ecart-type`inter_combinations:std_rr` et avec une moyenne calculée a l'aide de la similarite entre les combinaisons et les patrons dangereux.
+### Combinations with Intersection with a Pattern
+A normal distribution with a standard deviation of `inter_combinations:std_rr` is used, with a mean calculated based on the similarity between combinations and dangerous patterns.
 
-### Combinaisons disjointe des patrons
-On utilise une normale de moyenne `disjoint_combinations:mean_rr` et d'écart-type `disjoint_combinations:std_rr`. Les combinaisons reliées à un patron seront donc plus proches d'un RR predeterminé par la configuration.
+### Disjoint Combinations of Patterns
+A normal distribution with a mean of `disjoint_combinations:mean_rr` and a standard deviation of `disjoint_combinations:std_rr` is used. Combinations related to a pattern will thus be closer to an RR predetermined by the configuration.
 
+## General Idea
+1. Generate dangerous patterns and associated risks randomly.
+2. Generate combinations.
+3. Generate risks based on the similarity between combinations and patterns.
 
-## Idee generale
-1. Générer des patrons dangereux et des risques associés de manière aléatoire
-2. Générer des combinaisons
-3. Générer des risques bases sur la similarité entre les combinaisons et les patrons.
+This can be seen as a cut that overflows into other cuts, or as a tree. Each pattern is a root from which several combinations stem. A combination is associated with a pattern if the pattern is its nearest neighbor according to the Hamming distance. However, a combination can be placed in a separate set if no medication is shared between the combination and the nearest pattern.
 
-On peut voir ça comme une coupe qui déborde dans d'autres coupes, ou bien un arbre. Chaque patron est une racine de laquelle découlent plusieurs combinaisons. Une combinaison est associée à un patron si le patron est son voisin le plus proche selon la distance de Hamming. Cependant, une combinaison peut être mise dans un autre ensemble à part si aucun medicament n'est partagé entre la combinaison et le patron le plus proche.
-
-
-![Idee generale en image](images/sim-combi.png)
+See our [paper](https://arxiv.org/abs/2212.05190) for more details. 
 
 ## Troubleshooting
-1. Si bloque sur "Regenerating bad combinations...", il est possible que le nombre de combinaisons possibles "en moyenne" soit plus petit que le nombre de combinaisons que l'on tente de générer. Autrement dit, on devrait augmenter le nombre de Rx moyen par combinaisons, sinon on est pris dans une boucle infinie.
-Pour garantir une boucle finie, il suffit d'avoir que
+1. If stuck on "Regenerating bad combinations...", it is possible that the average number of "possible" combinations is smaller than the number of combinations being generated. In other words, the average number of Rx per combination should be increased, otherwise, you'll be stuck in an infinite loop.
+To ensure a finite loop, it suffices to have:
 
 $$ C_k(n) = {n \choose k} = \frac{n!}{k!(n-k)!} $$
 
-où $n$ est le nombre de Rx, $k$ est le nombre de Rx moyen par combinaison. Cette condition est suffisante, mais pas nécessaire, comme on travaille en espérance.
+where $n$ is the number of Rx, $k$ is the average number of Rx per combination. This condition is sufficient but not necessary, as we are working in expectation.
+
