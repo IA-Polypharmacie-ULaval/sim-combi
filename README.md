@@ -1,11 +1,11 @@
-# Simulateur de combinaisons de medicaments
+# Data simulator for polypharmacies / drug combinations
 
 ## TL;DR
 ```python create_dataset.py [--config path/to/config.json --seed your_seed]```
 
-Canevas de `config.json` in `configs/`
+Template of `config.json` in `configs/`
 
-## Exemple de donnees produites
+## Example end result
 | Rx1 | Rx2 | Rx3 | Rx4 | ... | RxN | RR   |
 |-----|-----|-----|-----|-----|-----|------|
 | 1   | 0   | 0   | 1   | ... | 0   | 3.00 |
@@ -16,30 +16,30 @@ Canevas de `config.json` in `configs/`
 
 
 ## Abbreviations
-* RR = Risque relatif
+* RR = Relative risk
 
 ## Configuration
-* `file_identifier`: Base textuelle pour identifier le jeu de données
-* `output_dir`: Dossier de sortie pour les fichiers du jeu de données
-* `seed`: Graine aléatoire pour le générateur
-* `n_combi`: Nombre de combinaisons uniques à produire
-* `n_rx`: Nombre de médicaments possibles (nombre de colonnes)
-* `mean_rx`: Nombre de médicaments moyen par combinaison (densité)
-* `use_gpu`: Booléen, indique si la génération devrait utiliser le GPU s'il est disponible
+* `file_identifier`: File identifier for the output data
+* `output_dir`: Directory identifier for the output data
+* `seed`: Random seed
+* `n_combi`: Number of unique drug combinations to produce
+* `n_rx`: Number of individual drugs (equals the number of columns in the generated dataset)
+* `mean_rx`: Mean number of drugs per combination
+* `use_gpu`: Indicate whether to use GPU for data generation, if available
 
-* `patterns`: Sous-configuration relative aux patrons dangereux
-    * `n_patterns`: Nombre de patron dangereux à produire
-    * `min_rr`: RR minimal des patrons
-    * `max_rr`: RR maximal des patrons
-    * `mean_rx`: Nombre moyen de Rx par patron
+* `patterns`: Sub-configuration for the dangerous patterns
+    * `n_patterns`: Number of dangerous patterns to generate
+    * `min_rr`: Minimal RR for patterns
+    * `max_rr`: Maximal RR for patterns
+    * `mean_rx`: Mean number of drugs per dangerous patterns
 
-* `disjoint_combinations`: Sous-configuration relative aux combinaisons disjointes des patrons dangereux
-    * `mean_rr`: Moyenne de la normale pour le tirage du RR
-    * `std_rr`: Variance de la normale pour le tirage du RR
+* `disjoint_combinations`: Sub-configuration for drug combinations disjoint from the dangerous patterns 
+    * `mean_rr`: Gaussian mean for the RR of these combinations
+    * `std_rr`: Gaussian standard deviation of these combinations
 
 
-* `inter_combinations`: Sous-configuration relative aux combinaisons ayant une intersection non vide avec des patrons dangereux
-    * `std_rr`: Variance de la normale pour le tirage du RR
+* `inter_combinations`: Sub-configurtion for drug combinations which intersect with dangerous patterns
+    * `std_rr`: Gaussian standard deviation of these combinations
 
 
 ## Distributions utilisees
