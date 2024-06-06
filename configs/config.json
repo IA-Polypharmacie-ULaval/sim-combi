@@ -17,6 +17,7 @@
         "std_rr": 0.2
     },
     "inter_combinations": {
-        "std_rr": 0.2
+        "std_rr": 0.1,
+        "adjust_factor": 0.1
     }
 }

@@ -252,6 +252,7 @@ def generate_risks(combinations, patterns, patterns_risks, config):
 
     # Related combis have at least one common Rx with patterns
     inter_std = config["inter_combinations"]["std_rr"]
+    adjust_factor = config["inter_combinations"]["adjust_factor"]
 
     logging.info("Generating risks for combinations")
 
@@ -290,9 +291,9 @@ def generate_risks(combinations, patterns, patterns_risks, config):
     )
 
     # Adjust expectation for intersecting combinations
-    mean_adjust = knn_dist[knn_idx_inter].squeeze() / n_rx_combi_pat[knn_idx_inter]
+    mean_adjust = knn_dist[inter_bool].squeeze() / n_rx_combi_pat[knn_idx_inter]
 
-    inter_mean = patterns_risks[knn_idx_inter] - mean_adjust
+    inter_mean = patterns_risks[knn_idx_inter] - adjust_factor * mean_adjust
     inter_risks = torch.normal(
         mean=inter_mean,
         std=torch.full((n_inter,), inter_std),
